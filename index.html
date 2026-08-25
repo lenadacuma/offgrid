@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OFFGRID</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Archivo+Black&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #F7F4FF;
+      --lav:     #C8B4FA;
+      --lav-lt:  #EDE8FF;
+      --lav-md:  #D4C8FF;
+      --white:   #FAFAFA;
+      --black:   #0A0A0A;
+      --mono:    'Courier Prime', 'Courier New', monospace;
+      --display: 'Archivo Black', sans-serif;
+    }
+
+    body {
+      font-family: var(--mono);
+      background: var(--bg);
+      color: var(--black);
+      min-height: 100vh;
+    }
+
+    /* ── Neobrutalist base ── */
+    .card {
+      background: var(--white);
+      border: 2px solid var(--black);
+      box-shadow: 4px 4px 0 var(--black);
+    }
+    .btn {
+      font-family: var(--mono);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      cursor: pointer;
+      border: 2px solid var(--black);
+      box-shadow: 4px 4px 0 var(--black);
+      background: var(--black);
+      color: var(--white);
+      padding: .7rem 1.6rem;
+      font-size: .85rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      transition: transform .1s, box-shadow .1s;
+      white-space: nowrap;
+    }
+    .btn:hover  { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--black); }
+    .btn:active { transform: translate(2px,2px);   box-shadow: 2px 2px 0 var(--black); }
+    .btn:disabled { opacity: .35; cursor: not-allowed; transform: none; box-shadow: 4px 4px 0 var(--black); }
+    .btn-lav   { background: var(--lav); color: var(--black); }
+    .btn-ghost { background: transparent; color: var(--black); box-shadow: 3px 3px 0 var(--black); }
+    .btn-ghost:hover { box-shadow: 5px 5px 0 var(--black); }
+
+    /* ── Marquee ── */
+    .marquee-wrap {
+      overflow: hidden;
+      background: var(--lav);
+      border-top: 2px solid var(--black);
+      border-bottom: 2px solid var(--black);
+      padding: .45rem 0;
+    }
+    .marquee-track {
+      display: flex;
+      white-space: nowrap;
+      animation: marquee 16s linear infinite;
+    }
+    .marquee-track span {
+      font-family: var(--mono);
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ── Badge ── */
+    .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: .68rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: .2rem .55rem;
+      border: 2px solid var(--black);
+      background: var(--black);
+      color: var(--white);
+    }
+    .badge-lav { background: var(--lav); color: var(--black); }
+    .badge-outline { background: transparent; color: var(--black); }
+
+    /* ── Animations ── */
+    @keyframes flash  { 0%{opacity:0} 15%{opacity:1} 100%{opacity:0} }
+    @keyframes pulse  { from{opacity:.4} to{opacity:1} }
+    @keyframes wiggle { 0%,100%{transform:rotate(0)} 30%{transform:rotate(-5deg)} 70%{transform:rotate(5deg)} }
+
+
+    /* ══════════════════════════════
+       LANDING
+    ══════════════════════════════ */
+    #landing { display: flex; flex-direction: column; min-height: 100vh; }
+
+    /* Nav */
+    .l-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.75rem;
+      border-bottom: 2px solid var(--black);
+      background: var(--white);
+    }
+    .l-logo {
+      font-family: var(--display);
+      font-size: 1.15rem;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .l-nav-right {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+    .l-nav-tag {
+      font-family: var(--mono);
+      font-size: .65rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      opacity: .4;
+    }
+
+    /* Hero */
+    .l-hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 1.5rem 3rem;
+      text-align: center;
+      gap: 2.5rem;
+    }
+
+    .l-eyebrow {
+      font-family: var(--mono);
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      opacity: .45;
+    }
+
+    .l-heading {
+      font-family: var(--display);
+      font-size: clamp(3.5rem, 12vw, 8rem);
+      line-height: .92;
+      text-transform: uppercase;
+      letter-spacing: -.01em;
+    }
+    .l-heading em {
+      font-style: normal;
+      color: var(--white);
+      -webkit-text-stroke: 2.5px var(--black);
+    }
+
+    .l-sub {
+      font-family: var(--mono);
+      font-size: .92rem;
+      line-height: 1.7;
+      color: #555;
+      max-width: 400px;
+    }
+
+    /* Stats row — 3 bordered boxes like reference */
+    .l-stats {
+      display: flex;
+      gap: 0;
+      border: 2px solid var(--black);
+      box-shadow: 5px 5px 0 var(--black);
+      background: var(--white);
+    }
+    .l-stat {
+      padding: 1.1rem 2.2rem;
+      text-align: center;
+      border-right: 2px solid var(--black);
+    }
+    .l-stat:last-child { border-right: none; }
+    .l-stat-num {
+      font-family: var(--display);
+      font-size: 2rem;
+      line-height: 1;
+      display: block;
+    }
+    .l-stat-label {
+      font-family: var(--mono);
+      font-size: .62rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      opacity: .45;
+      display: block;
+      margin-top: .25rem;
+    }
+
+    /* CTA button — styled like the reference's big pill button */
+    .l-cta {
+      font-size: 1rem;
+      padding: .9rem 2.4rem;
+      letter-spacing: .12em;
+      box-shadow: 5px 5px 0 var(--black);
+    }
+    .l-cta:hover { box-shadow: 7px 7px 0 var(--black); }
+
+    /* Footer ticker of features */
+    .l-footer {
+      border-top: 2px solid var(--black);
+      background: var(--black);
+      padding: .7rem 1.75rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem 1.5rem;
+    }
+    .l-footer span {
+      font-family: var(--mono);
+      font-size: .65rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--lav);
+      opacity: .7;
+    }
+
+
+    /* ══════════════════════════════
+       BOOTH
+    ══════════════════════════════ */
+    #booth { display: none; flex-direction: column; min-height: 100vh; }
+
+    /* Header */
+    .b-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .85rem 1.5rem;
+      border-bottom: 2px solid var(--black);
+      background: var(--white);
+      transition: background .25s;
+    }
+    .b-logo {
+      font-family: var(--display);
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .b-shots {
+      font-family: var(--mono);
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: .2rem .6rem;
+      border: 2px solid var(--black);
+      background: transparent;
+    }
+
+    /* Body */
+    .b-body { flex: 1; display: flex; flex-direction: column; }
+    @media (min-width: 900px) { .b-body { flex-direction: row; } }
+
+    /* Left – camera */
+    .b-left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      border-bottom: 2px solid var(--black);
+    }
+    @media (min-width: 900px) { .b-left { border-bottom: none; border-right: 2px solid var(--black); } }
+
+    .cam-view {
+      flex: 1;
+      background: #111;
+      position: relative;
+      min-height: 260px;
+      overflow: hidden;
+    }
+    #video {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1);
+      display: none;
+    }
+
+    /* Camera overlays */
+    .cam-ov {
+      position: absolute; inset: 0;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.2rem;
+      padding: 2.5rem;
+      text-align: center;
+    }
+    .cam-ov.on { display: flex; }
+    .cam-ov h2 {
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 1.3rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--white);
+    }
+    .cam-ov p { color: rgba(255,255,255,.4); font-size: .82rem; line-height: 1.6; }
+    #cam-requesting h2 { animation: pulse 1s ease-in-out infinite alternate; }
+    #cam-denied h2 { color: #ff7070; }
+
+    .countdown-ov {
+      position: absolute; inset: 0;
+      display: none;
+      align-items: center; justify-content: center;
+      pointer-events: none;
+    }
+    .countdown-ov.on { display: flex; }
+    .cd-num {
+      font-family: var(--display);
+      font-size: 9rem;
+      color: #fff;
+      text-shadow: 4px 4px 0 var(--black);
+      line-height: 1;
+    }
+
+    .shot-pips {
+      position: absolute; top: .75rem; right: .75rem;
+      display: none; gap: .35rem;
+    }
+    .shot-pips.on { display: flex; }
+    .pip { width: .55rem; height: .55rem; border: 2px solid rgba(255,255,255,.5); }
+    .pip.lit { background: var(--lav); border-color: var(--lav); }
+
+    .flash-el { position: absolute; inset: 0; background: #fff; pointer-events: none; opacity: 0; }
+
+    /* Controls bar — card-footer style from reference */
+    .b-controls {
+      display: flex;
+      gap: .6rem;
+      padding: .75rem 1rem;
+      border-top: 2px solid var(--black);
+      background: var(--white);
+      transition: background .25s;
+    }
+    #shoot-btn { flex: 1; padding: .85rem; }
+    #retake-btn { display: none; }
+
+    /* Options panel */
+    .b-options {
+      border-top: 2px solid var(--black);
+      background: var(--bg);
+      transition: background .25s;
+    }
+
+    .opt-tabs { display: flex; border-bottom: 2px solid var(--black); }
+    .opt-tab {
+      flex: 1;
+      padding: .65rem .4rem;
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: .72rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: rgba(0,0,0,.35);
+      border-right: 2px solid var(--black);
+      transition: color .12s, background .12s;
+    }
+    .opt-tab:last-child { border-right: none; }
+    .opt-tab.on { color: var(--black); background: var(--lav-lt); }
+
+    .opt-panel { display: none; padding: .85rem 1rem; }
+    .opt-panel.on { display: block; }
+
+    /* Pills */
+    .pill-row { display: flex; flex-wrap: wrap; gap: .45rem; }
+    .pill {
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: .7rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: .35rem .8rem;
+      border: 2px solid var(--black);
+      box-shadow: 2px 2px 0 var(--black);
+      cursor: pointer;
+      background: var(--white);
+      color: var(--black);
+      transition: transform .08s, box-shadow .08s;
+    }
+    .pill:hover  { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--black); }
+    .pill:active { transform: translate(1px,1px);   box-shadow: 1px 1px 0 var(--black); }
+    .pill.on { background: var(--black); color: var(--white); }
+
+    /* Theme swatches — small bordered squares like reference color tags */
+    .swatch-row { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+    .swatch {
+      width: 2rem; height: 2rem;
+      border: 2px solid var(--black);
+      cursor: pointer;
+      transition: box-shadow .1s, transform .1s;
+      position: relative;
+    }
+    .swatch:hover  { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--black); }
+    .swatch.on { box-shadow: 4px 4px 0 var(--black); }
+    .swatch.on::after {
+      content: '✓';
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .65rem; font-weight: 700;
+      color: var(--black);
+    }
+    .swatch[data-theme="dark"].on::after { color: #fff; }
+
+    /* Stickers */
+    .sticker-hint {
+      font-family: var(--mono);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--black);
+      opacity: .35;
+      margin-bottom: .55rem;
+    }
+    .sticker-row { display: flex; flex-wrap: wrap; gap: .35rem; }
+    .stk {
+      width: 2.1rem; height: 2.1rem;
+      font-size: 1.2rem;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid transparent;
+      cursor: pointer;
+      background: transparent;
+      transition: border-color .1s;
+    }
+    .stk:hover:not(:disabled) { border-color: var(--black); animation: wiggle .35s; }
+    .stk:disabled { opacity: .2; cursor: not-allowed; }
+
+    /* Right – strip */
+    .b-right {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      border-top: 2px solid var(--black);
+    }
+    @media (min-width: 900px) { .b-right { width: 268px; border-top: none; } }
+
+    /* Strip header — card-style label like reference */
+    .strip-head {
+      padding: .6rem 1rem;
+      border-bottom: 2px solid var(--black);
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background .25s;
+    }
+    .strip-head-label {
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: .68rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    .strip-area {
+      flex: 1;
+      padding: .85rem .75rem .5rem;
+      position: relative;
+      user-select: none;
+      background: var(--bg);
+      transition: background .25s;
+      min-height: 320px;
+    }
+
+    .strip-wordmark {
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: .55rem;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: .5rem;
+      opacity: .4;
+    }
+
+    .photo-col { display: flex; flex-direction: column; gap: .45rem; }
+    .photo-slot {
+      aspect-ratio: 4/3;
+      border: 2px solid var(--black);
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      color: rgba(0,0,0,.15);
+      background: var(--lav-lt);
+    }
+    .photo-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .strip-date {
+      font-family: var(--mono);
+      font-size: .58rem;
+      font-weight: 700;
+      text-align: center;
+      margin-top: .5rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      opacity: .35;
+    }
+
+    .sticker-on-strip {
+      position: absolute;
+      cursor: grab;
+      line-height: 1;
+      touch-action: none;
+      z-index: 10;
+    }
+    .sticker-on-strip:active { cursor: grabbing; }
+
+    /* Strip footer — mirrors reference card footer (thin top border, flex between two items) */
+    .strip-footer {
+      border-top: 2px solid var(--black);
+      padding: .7rem .75rem;
+      display: flex;
+      flex-direction: column;
+      gap: .4rem;
+      background: var(--white);
+      transition: background .25s;
+    }
+    #download-btn { width: 100%; padding: .8rem; letter-spacing: .1em; }
+    #clear-btn { display: none; width: 100%; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-thumb { background: var(--black); }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════
+     LANDING
+══════════════════════════════ -->
+<section id="landing">
+
+  <nav class="l-nav">
+    <span class="l-logo">OFFGRID</span>
+    <div class="l-nav-right">
+      <span class="l-nav-tag">Photo Strip Studio</span>
+      <span class="badge badge-lav">EST. 2024</span>
+    </div>
+  </nav>
+
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span>/// SNAP /// CLICK /// FLASH /// POSE /// SHOOT /// VIBE /// SNAP /// CLICK /// FLASH /// POSE /// SHOOT /// VIBE /// SNAP /// CLICK /// FLASH /// POSE /// SHOOT /// VIBE /// SNAP /// CLICK /// FLASH /// POSE /// SHOOT /// VIBE ///&nbsp;</span>
+      <span>/// SNAP /// CLICK /// FLASH /// POSE /// SHOOT /// VIBE /// SNAP /// CLICK /// FLASH /// POSE /// SHOOT /// VIBE /// SNAP /// CLICK /// FLASH /// POSE /// SHOOT /// VIBE /// SNAP /// CLICK /// FLASH /// POSE /// SHOOT /// VIBE ///&nbsp;</span>
+    </div>
+  </div>
+
+  <div class="l-hero">
+    <p class="l-eyebrow">Digital Photobooth</p>
+
+    <h1 class="l-heading">
+      POSE.<br>
+      <em>SNAP.</em><br>
+      KEEP.
+    </h1>
+
+    <!-- Stat boxes exactly like the reference -->
+    <div class="l-stats">
+      <div class="l-stat">
+        <span class="l-stat-num">4</span>
+        <span class="l-stat-label">Shots</span>
+      </div>
+      <div class="l-stat">
+        <span class="l-stat-num">6</span>
+        <span class="l-stat-label">Filters</span>
+      </div>
+      <div class="l-stat">
+        <span class="l-stat-num">24</span>
+        <span class="l-stat-label">Stickers</span>
+      </div>
+    </div>
+
+    <button class="btn btn-lav l-cta" id="enter-btn">
+      ◎ &nbsp;Open Booth
+    </button>
+
+    <p class="l-sub">
+      Strike a pose. Apply filters. Slap on stickers.<br>
+      Download your strip and flex on everyone.
+    </p>
+  </div>
+
+  <footer class="l-footer">
+    <span>Camera Access</span>
+    <span>Live Filters</span>
+    <span>Strip Themes</span>
+    <span>Drag Stickers</span>
+    <span>Download JPG</span>
+  </footer>
+
+</section>
+
+
+<!-- ══════════════════════════════
+     BOOTH
+══════════════════════════════ -->
+<section id="booth">
+
+  <header class="b-header" id="b-header">
+    <button class="btn btn-ghost" id="back-btn" style="padding:.4rem .85rem; font-size:.72rem;">← Back</button>
+    <span class="b-logo">OFFGRID</span>
+    <span class="b-shots" id="shot-count">0 / 4</span>
+  </header>
+
+  <div class="b-body">
+
+    <!-- Camera -->
+    <div class="b-left">
+      <div class="cam-view">
+        <video id="video" playsinline muted autoplay></video>
+
+        <div class="cam-ov on" id="cam-idle">
+          <h2>Enable Camera</h2>
+          <button class="btn btn-lav" id="allow-btn">Allow Access</button>
+          <p>Nothing is stored. Photos stay in your browser.</p>
+        </div>
+        <div class="cam-ov" id="cam-requesting">
+          <h2>Requesting…</h2>
+        </div>
+        <div class="cam-ov" id="cam-denied">
+          <h2>Blocked</h2>
+          <p>Allow camera access in your browser settings, then try again.</p>
+          <button class="btn btn-lav" id="retry-btn">Try Again</button>
+        </div>
+
+        <div class="countdown-ov" id="countdown-ov">
+          <div class="cd-num" id="cd-num">3</div>
+        </div>
+
+        <div class="shot-pips" id="shot-pips">
+          <div class="pip" id="pip-0"></div>
+          <div class="pip" id="pip-1"></div>
+          <div class="pip" id="pip-2"></div>
+          <div class="pip" id="pip-3"></div>
+        </div>
+        <div class="flash-el" id="flash-el"></div>
+      </div>
+
+      <div class="b-controls" id="b-controls">
+        <button class="btn" id="shoot-btn" disabled>◎ &nbsp;Shoot Strip</button>
+        <button class="btn btn-ghost" id="retake-btn">Retake</button>
+      </div>
+
+      <div class="b-options" id="b-options">
+        <div class="opt-tabs">
+          <button class="opt-tab on" data-tab="filters">Filters</button>
+          <button class="opt-tab" data-tab="themes">Themes</button>
+          <button class="opt-tab" data-tab="stickers">Stickers</button>
+        </div>
+
+        <div class="opt-panel on" id="tab-filters">
+          <div class="pill-row">
+            <button class="pill on" data-filter="normal">Original</button>
+            <button class="pill" data-filter="grayscale">B&amp;W</button>
+            <button class="pill" data-filter="sepia">Retro</button>
+            <button class="pill" data-filter="warm">Warm</button>
+            <button class="pill" data-filter="cool">Cool</button>
+            <button class="pill" data-filter="vivid">Vivid</button>
+          </div>
+        </div>
+
+        <div class="opt-panel" id="tab-themes">
+          <div class="swatch-row">
+            <div class="swatch on"  data-theme="white" style="background:#FAFAFA;" title="White"></div>
+            <div class="swatch"     data-theme="lav"   style="background:#EDE8FF;" title="Lavender"></div>
+            <div class="swatch"     data-theme="soft"  style="background:#C8B4FA;" title="Soft Purple"></div>
+            <div class="swatch"     data-theme="deep"  style="background:#7C4DFF;" title="Deep Violet"></div>
+            <div class="swatch"     data-theme="dark"  style="background:#0A0A0A;" title="Black"></div>
+            <div class="swatch"     data-theme="dust"  style="background:#D8CCF5;" title="Dust"></div>
+            <span style="font-family:var(--mono);font-size:.65rem;letter-spacing:.06em;text-transform:uppercase;opacity:.4;margin-left:.25rem;">Strip theme</span>
+          </div>
+        </div>
+
+        <div class="opt-panel" id="tab-stickers">
+          <p class="sticker-hint" id="sticker-hint">Shoot 4 photos to unlock stickers.</p>
+          <div class="sticker-row" id="sticker-grid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Strip -->
+    <div class="b-right">
+      <div class="strip-head" id="strip-head">
+        <span class="strip-head-label" id="strip-head-label">Your Strip</span>
+        <span class="badge badge-lav" id="strip-badge">Preview</span>
+      </div>
+
+      <div class="strip-area" id="strip-area">
+        <div class="strip-wordmark" id="strip-wm">OFFGRID</div>
+        <div class="photo-col">
+          <div class="photo-slot" id="slot-0">📷</div>
+          <div class="photo-slot" id="slot-1">📷</div>
+          <div class="photo-slot" id="slot-2">📷</div>
+          <div class="photo-slot" id="slot-3">📷</div>
+        </div>
+        <div class="strip-date" id="strip-date"></div>
+      </div>
+
+      <div class="strip-footer" id="strip-footer">
+        <button class="btn" id="download-btn" disabled>↓ &nbsp;Download Strip</button>
+        <button class="btn btn-ghost" id="clear-btn">Clear Stickers</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  const FILTERS = {
+    normal:    'none',
+    grayscale: 'grayscale(100%)',
+    sepia:     'sepia(90%) contrast(110%)',
+    warm:      'saturate(160%) hue-rotate(-20deg) brightness(108%)',
+    cool:      'saturate(130%) hue-rotate(25deg) brightness(95%) contrast(105%)',
+    vivid:     'saturate(220%) contrast(115%) brightness(102%)',
+  };
+
+  const THEMES = {
+    white: { bg: '#FAFAFA', accent: '#0A0A0A', text: '#0A0A0A', slot: '#EDE8FF' },
+    lav:   { bg: '#EDE8FF', accent: '#0A0A0A', text: '#0A0A0A', slot: '#D4C8FF' },
+    soft:  { bg: '#C8B4FA', accent: '#0A0A0A', text: '#0A0A0A', slot: '#b89df5' },
+    deep:  { bg: '#7C4DFF', accent: '#EDE8FF', text: '#FAFAFA', slot: '#6035e0' },
+    dark:  { bg: '#0A0A0A', accent: '#C8B4FA', text: '#C8B4FA', slot: '#1c1c1c' },
+    dust:  { bg: '#D8CCF5', accent: '#0A0A0A', text: '#0A0A0A', slot: '#c9b9f0' },
+  };
+
+  const STICKERS = ['⭐','💫','✨','🌈','💥','🔥','💎','🎀','🌸','🦋','❤️','👑','🌙','⚡','🎭','🍒','🌟','💄','🤍','💜','🖤','🧨','🪩','🫧'];
+
+  let camState='idle', activeFilter='normal', activeTheme='white';
+  let photos=[], stickers=[], shooting=false, shotCount=0, drag=null;
+
+  const $  = id => document.getElementById(id);
+  const $landing=$('landing'), $booth=$('booth'), $video=$('video');
+  const $camIdle=$('cam-idle'), $camReq=$('cam-requesting'), $camDenied=$('cam-denied');
+  const $allowBtn=$('allow-btn'), $retryBtn=$('retry-btn');
+  const $shootBtn=$('shoot-btn'), $retakeBtn=$('retake-btn');
+  const $cdOv=$('countdown-ov'), $cdNum=$('cd-num');
+  const $pips=$('shot-pips'), $flashEl=$('flash-el'), $shotCount=$('shot-count');
+  const $stripArea=$('strip-area'), $stripWm=$('strip-wm'), $stripDate=$('strip-date');
+  const $stickerHint=$('sticker-hint'), $stickerGrid=$('sticker-grid');
+  const $downloadBtn=$('download-btn'), $clearBtn=$('clear-btn');
+  const $bHeader=$('b-header'), $bControls=$('b-controls'), $bOptions=$('b-options');
+  const $stripHead=$('strip-head'), $stripFooter=$('strip-footer');
+
+  const today = new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  $stripDate.textContent = today;
+
+  STICKERS.forEach(e => {
+    const b=document.createElement('button');
+    b.className='stk'; b.textContent=e; b.disabled=true;
+    b.addEventListener('click',()=>addSticker(e));
+    $stickerGrid.appendChild(b);
+  });
+
+  $('enter-btn').addEventListener('click',()=>{ $landing.style.display='none'; $booth.style.display='flex'; });
+  $('back-btn').addEventListener('click',()=>{ stopCamera(); $booth.style.display='none'; $landing.style.display='flex'; });
+
+  function setCam(s){
+    camState=s;
+    $camIdle.classList.toggle('on',  s==='idle');
+    $camReq.classList.toggle('on',   s==='requesting');
+    $camDenied.classList.toggle('on',s==='denied');
+    $video.style.display = s==='active'?'block':'none';
+    $shootBtn.disabled   = s!=='active';
+  }
+  async function startCamera(){
+    setCam('requesting');
+    try{
+      const st=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}});
+      $video.srcObject=st; await $video.play(); setCam('active');
+    }catch{ setCam('denied'); }
+  }
+  function stopCamera(){ $video.srcObject?.getTracks().forEach(t=>t.stop()); $video.srcObject=null; setCam('idle'); }
+  $allowBtn.addEventListener('click',startCamera);
+  $retryBtn.addEventListener('click',startCamera);
+
+  function grabFrame(){
+    const c=document.createElement('canvas');
+    c.width=$video.videoWidth||640; c.height=$video.videoHeight||480;
+    const ctx=c.getContext('2d');
+    ctx.filter=FILTERS[activeFilter];
+    ctx.translate(c.width,0); ctx.scale(-1,1);
+    ctx.drawImage($video,0,0);
+    return c.toDataURL('image/jpeg',.92);
+  }
+
+  const wait=ms=>new Promise(r=>setTimeout(r,ms));
+
+  async function shootStrip(){
+    if(shooting||camState!=='active') return;
+    shooting=true; photos=[]; stickers=[]; shotCount=0;
+    clearSlots(); updateStickers();
+    $retakeBtn.style.display='none';
+    $downloadBtn.disabled=true; $downloadBtn.textContent='↓  Download Strip';
+    $clearBtn.style.display='none';
+    $pips.classList.add('on');
+
+    for(let i=0;i<4;i++){
+      for(let c=3;c>=1;c--){
+        $cdNum.textContent=c; $cdNum.style.fontSize='';
+        $cdOv.classList.add('on'); await wait(750);
+      }
+      $cdNum.textContent='☺'; $cdNum.style.fontSize='5.5rem';
+      await wait(450);
+      const url=grabFrame();
+      photos.push({url,filter:activeFilter});
+      doFlash(); setSlot(i,url,activeFilter);
+      shotCount=i+1; updatePips();
+      $shotCount.textContent=`${shotCount} / 4`;
+      $cdOv.classList.remove('on');
+      if(i<3) await wait(650);
+    }
+
+    shooting=false; $pips.classList.remove('on');
+    $retakeBtn.style.display='inline-flex';
+    $downloadBtn.disabled=false; $downloadBtn.textContent='↓  Download Strip';
+    $shootBtn.disabled=false; $shootBtn.textContent='◎  Shoot Strip';
+    updateStickers();
+  }
+
+  function doFlash(){
+    $flashEl.style.opacity='1'; $flashEl.style.animation='none';
+    void $flashEl.offsetHeight;
+    $flashEl.style.animation='flash .35s ease-out forwards';
+  }
+  function updatePips(){
+    for(let i=0;i<4;i++) $(`pip-${i}`).classList.toggle('lit',i<shotCount);
+  }
+  function clearSlots(){
+    shotCount=0; updatePips(); $shotCount.textContent='0 / 4';
+    for(let i=0;i<4;i++){
+      const s=$(`slot-${i}`); s.innerHTML='📷'; s.style.background='';
+    }
+    document.querySelectorAll('.sticker-on-strip').forEach(e=>e.remove());
+  }
+  function setSlot(i,url,filter){
+    const s=$(`slot-${i}`); s.innerHTML='';
+    const img=document.createElement('img');
+    img.src=url; img.style.filter=FILTERS[filter]; s.appendChild(img);
+  }
+
+  $shootBtn.addEventListener('click',()=>{ $shootBtn.disabled=true; $shootBtn.textContent='Shooting…'; shootStrip(); });
+  $retakeBtn.addEventListener('click',()=>{
+    clearSlots(); photos=[]; stickers=[];
+    $retakeBtn.style.display='none';
+    $downloadBtn.disabled=true; $downloadBtn.textContent='↓  Download Strip';
+    $clearBtn.style.display='none'; updateStickers();
+  });
+
+  document.querySelectorAll('[data-filter]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      activeFilter=btn.dataset.filter;
+      document.querySelectorAll('[data-filter]').forEach(b=>b.classList.remove('on'));
+      btn.classList.add('on');
+      $video.style.filter=FILTERS[activeFilter];
+    });
+  });
+
+  function applyTheme(name){
+    const t=THEMES[name];
+    const surfs=[$bHeader,$bControls,$bOptions,$stripHead,$stripArea,$stripFooter,
+      ...document.querySelectorAll('.opt-panel')];
+    surfs.forEach(el=>el&&(el.style.background=t.bg));
+    $stripWm.style.color=t.text; $stripDate.style.color=t.text;
+    $('strip-head-label').style.color=t.text;
+    document.querySelectorAll('.photo-slot').forEach(s=>{
+      s.style.borderColor=t.accent;
+      if(!s.querySelector('img')) s.style.background=t.slot;
+    });
+    document.querySelectorAll('.pill').forEach(p=>{
+      p.style.borderColor=t.accent;
+      p.style.boxShadow=`2px 2px 0 ${t.accent}`;
+      p.style.background=p.classList.contains('on')?t.accent:'transparent';
+      p.style.color=p.classList.contains('on')?t.bg:t.text;
+    });
+    document.querySelectorAll('.opt-tab').forEach(tb=>{
+      tb.style.borderColor=t.accent;
+      tb.style.color=tb.classList.contains('on')?t.text:`${t.text}55`;
+    });
+    [$bHeader,$bControls,$bOptions,$stripHead,$stripArea,$stripFooter].forEach(el=>{
+      if(el) el.style.borderColor=t.accent;
+    });
+    document.querySelectorAll('.opt-tabs').forEach(el=>el.style.borderBottomColor=t.accent);
+    document.querySelector('.b-left').style.borderColor=t.accent;
+  }
+
+  document.querySelectorAll('[data-theme]').forEach(sw=>{
+    sw.addEventListener('click',()=>{
+      activeTheme=sw.dataset.theme;
+      document.querySelectorAll('[data-theme]').forEach(s=>s.classList.remove('on'));
+      sw.classList.add('on');
+      applyTheme(activeTheme);
+    });
+  });
+
+  document.querySelectorAll('.opt-tab').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.opt-tab').forEach(b=>b.classList.remove('on'));
+      document.querySelectorAll('.opt-panel').forEach(p=>p.classList.remove('on'));
+      btn.classList.add('on');
+      $(`tab-${btn.dataset.tab}`).classList.add('on');
+      applyTheme(activeTheme);
+    });
+  });
+
+  function updateStickers(){
+    const ready=photos.length===4;
+    $stickerHint.style.display=ready?'none':'block';
+    document.querySelectorAll('.stk').forEach(b=>b.disabled=!ready);
+    $clearBtn.style.display=(ready&&stickers.length>0)?'inline-flex':'none';
+  }
+  function addSticker(emoji){
+    if(photos.length<4) return;
+    const rect=$stripArea.getBoundingClientRect();
+    const size=26+Math.floor(Math.random()*18);
+    const id=Math.random().toString(36).slice(2);
+    const x=Math.random()*Math.max(10,rect.width-size-10);
+    const y=Math.random()*Math.max(10,rect.height-size-10);
+    stickers.push({id,emoji,x,y,size});
+    renderSticker({id,emoji,x,y,size});
+    $clearBtn.style.display='inline-flex';
+  }
+  function renderSticker({id,emoji,x,y,size}){
+    const el=document.createElement('div');
+    el.className='sticker-on-strip'; el.dataset.id=id; el.textContent=emoji;
+    el.style.cssText=`left:${x}px;top:${y}px;font-size:${size}px;`;
+    el.addEventListener('mousedown',startDrag);
+    el.addEventListener('touchstart',startDrag,{passive:false});
+    $stripArea.appendChild(el);
+  }
+  function startDrag(e){
+    e.preventDefault();
+    const el=e.currentTarget;
+    const cx=e.touches?e.touches[0].clientX:e.clientX;
+    const cy=e.touches?e.touches[0].clientY:e.clientY;
+    drag={id:el.dataset.id,el,sx:cx,sy:cy,bx:parseFloat(el.style.left),by:parseFloat(el.style.top)};
+  }
+  window.addEventListener('mousemove',mv=>{
+    if(!drag) return; mv.preventDefault();
+    const cx=mv.touches?mv.touches[0].clientX:mv.clientX;
+    const cy=mv.touches?mv.touches[0].clientY:mv.clientY;
+    drag.el.style.left=(drag.bx+cx-drag.sx)+'px';
+    drag.el.style.top =(drag.by+cy-drag.sy)+'px';
+    const s=stickers.find(s=>s.id===drag.id);
+    if(s){s.x=parseFloat(drag.el.style.left);s.y=parseFloat(drag.el.style.top);}
+  });
+  window.addEventListener('touchmove',tv=>{
+    if(!drag) return; tv.preventDefault();
+    const cx=tv.touches[0].clientX, cy=tv.touches[0].clientY;
+    drag.el.style.left=(drag.bx+cx-drag.sx)+'px';
+    drag.el.style.top =(drag.by+cy-drag.sy)+'px';
+    const s=stickers.find(s=>s.id===drag.id);
+    if(s){s.x=parseFloat(drag.el.style.left);s.y=parseFloat(drag.el.style.top);}
+  },{passive:false});
+  window.addEventListener('mouseup',()=>drag=null);
+  window.addEventListener('touchend',()=>drag=null);
+
+  $clearBtn.addEventListener('click',()=>{
+    stickers=[]; document.querySelectorAll('.sticker-on-strip').forEach(e=>e.remove());
+    $clearBtn.style.display='none';
+  });
+
+  $downloadBtn.addEventListener('click',async()=>{
+    if(photos.length<4) return;
+    const PAD=12,PW=360,PH=270,HTOP=38,HBOT=32;
+    const W=PW+PAD*2, H=HTOP+(PH+PAD)*4+PAD+HBOT;
+    const cv=document.createElement('canvas');
+    cv.width=W; cv.height=H;
+    const ctx=cv.getContext('2d');
+    const t=THEMES[activeTheme];
+    ctx.fillStyle=t.bg; ctx.fillRect(0,0,W,H);
+    ctx.fillStyle=t.text; ctx.globalAlpha=.4;
+    ctx.font='700 11px "Courier Prime",monospace';
+    ctx.textAlign='center'; ctx.fillText('OFFGRID',W/2,24);
+    ctx.globalAlpha=1;
+    for(let i=0;i<4;i++){
+      const img=new Image(); img.src=photos[i].url;
+      await new Promise(r=>{img.onload=r;});
+      const y=HTOP+(PH+PAD)*i+PAD/2;
+      ctx.filter=FILTERS[photos[i].filter];
+      ctx.drawImage(img,PAD,y,PW,PH);
+      ctx.filter='none';
+      ctx.strokeStyle=t.accent; ctx.lineWidth=2;
+      ctx.strokeRect(PAD,y,PW,PH);
+    }
+    const rect=$stripArea.getBoundingClientRect();
+    const sx=W/rect.width, sy=(H-HTOP-HBOT)/rect.height;
+    ctx.textAlign='left';
+    for(const s of stickers){
+      ctx.font=`${Math.round(s.size*1.3)}px serif`;
+      ctx.fillText(s.emoji,s.x*sx,HTOP+s.y*sy+s.size);
+    }
+    ctx.globalAlpha=.35; ctx.fillStyle=t.text;
+    ctx.font='11px "Courier Prime",monospace';
+    ctx.textAlign='center'; ctx.fillText(today,W/2,H-10);
+    ctx.globalAlpha=1;
+    const a=document.createElement('a');
+    a.download='offgrid-strip.jpg';
+    a.href=cv.toDataURL('image/jpeg',.95); a.click();
+    $downloadBtn.textContent='✓  Saved!';
+    setTimeout(()=>$downloadBtn.textContent='↓  Download Strip',2500);
+  });
+</script>
+</body>
+</html>
